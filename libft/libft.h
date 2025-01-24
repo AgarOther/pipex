@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 20:21:22 by scraeyme          #+#    #+#             */
-/*   Updated: 2024/11/14 14:05:03 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/24 15:35:08 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 # include <unistd.h>
 # include "ft_printf/includes/ft_printf.h"
 
-typedef struct s_map
+typedef struct s_list
 {
 	char			*str;
-	struct s_map	*next;
-}					t_map;
+	struct s_list	*next;
+}					t_list;
 
 int		ft_atoi(const char *nptr);
 void	ft_bzero(void *s, size_t n);
@@ -60,6 +60,8 @@ char	*ft_strtrim(char const *s1);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 int		ft_stroccur(char *str, int c);
+int		ft_strcharindex(char *str, char c);
+int		str_starts_with(const char *str, const char *cmp_str);
 void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
@@ -67,12 +69,12 @@ void	ft_putnbr_fd(int n, int fd);
 void	ft_tabfree(char **tab, int size);
 void	ft_tabprint(char **tab, int endl);
 char	**ft_tabdup(char **tab, int size);
-void	ft_lstprint(t_map *map, int endl);
-t_map	*ft_lstnew(char *new );
-void	ft_lstadd_front(t_map **lst, t_map *new);
-int		ft_lstsize(t_map *lst);
-t_map	*ft_lstlast(t_map *lst);
-void	ft_lstadd_back(t_map **lst, t_map *new);
-void	ft_lstdelone(t_map *lst);
-void	ft_lstclear(t_map **lst);
+void	ft_lstprint(t_list *lst, int endl);
+t_list	*ft_lstnew(char *new );
+void	ft_lstadd_front(t_list **lst, t_list *new);
+int		ft_lstsize(t_list *lst);
+t_list	*ft_lstlast(t_list *lst);
+void	ft_lstadd_back(t_list **lst, t_list *new);
+void	ft_lstdelone(t_list *lst);
+void	ft_lstclear(t_list **lst);
 #endif

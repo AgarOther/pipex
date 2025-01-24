@@ -39,6 +39,8 @@ SRCS =	ft_atoi.c \
 		ft_strlcpy.c \
 		ft_strncmp.c \
 		ft_stroccur.c \
+		ft_strcharindex.c \
+		ft_strstartswith.c \
 		ft_memcmp.c \
 		ft_calloc.c \
 		ft_substr.c \
@@ -57,6 +59,8 @@ SRCS =	ft_atoi.c \
 		ft_lstdelone.c \
 		ft_lstclear.c \
 		ft_lstprint.c \
+		get_next_line/get_next_line.c \
+		get_next_line/get_next_line_utils.c \
 		ft_printf/srcs/ft_hexa_conversion.c \
 		ft_printf/srcs/ft_numlen.c \
 		ft_printf/srcs/ft_printf.c \

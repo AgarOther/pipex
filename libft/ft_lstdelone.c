@@ -6,13 +6,13 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:03:57 by scraeyme          #+#    #+#             */
-/*   Updated: 2024/11/05 22:51:30 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:06:01 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstdelone(t_map *lst)
+void	ft_lstdelone(t_list *lst)
 {
 	if (!lst)
 		return ;

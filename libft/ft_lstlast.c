@@ -6,13 +6,13 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:56:14 by scraeyme          #+#    #+#             */
-/*   Updated: 2024/11/05 22:51:28 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:05:56 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_map	*ft_lstlast(t_map *lst)
+t_list	*ft_lstlast(t_list *lst)
 {
 	while (lst && lst->next)
 		lst = lst->next;

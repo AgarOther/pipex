@@ -1,3 +1,4 @@
 infile.txt
 outfile.txt
 .vscode/
+*.o

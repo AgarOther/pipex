@@ -1,21 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
+/*   ft_strstartswith.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/10 15:48:47 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/24 14:06:16 by scraeyme         ###   ########.fr       */
+/*   Created: 2025/01/24 15:34:46 by scraeyme          #+#    #+#             */
+/*   Updated: 2025/01/24 15:34:57 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
+int	str_starts_with(const char *str, const char *cmp_str)
 {
-	if (*lst)
-		ft_lstlast(*lst)->next = new;
-	else
-		*lst = new;
+	int	i;
+	int cmp_len;
+
+	i = 0;
+	cmp_len = ft_strlen(cmp_str);
+	if (!str || !cmp_str)
+		return (0);
+	while (str[i] && cmp_len > 0)
+	{
+		if (str[i] != cmp_str[i])
+			return (0);
+		cmp_len--;
+		i++;
+	}
+	return (1);
 }

@@ -6,15 +6,15 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:15:31 by scraeyme          #+#    #+#             */
-/*   Updated: 2024/11/05 22:51:33 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:06:05 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstclear(t_map **lst)
+void	ft_lstclear(t_list **lst)
 {
-	t_map	*temp;
+	t_list	*temp;
 
 	if (!lst)
 		return ;

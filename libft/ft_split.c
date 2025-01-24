@@ -12,6 +12,29 @@
 
 #include "libft.h"
 
+static int	count_strs(char *str, char c)
+{
+	int	i;
+	int	strs;
+	int	is_spaced;
+
+	i = 0;
+	strs = 0;
+	is_spaced = 1;
+	while (str[i])
+	{
+		if (is_spaced && str[i] != c)
+		{
+			is_spaced = 0;
+			strs++;
+		}
+		else if (!is_spaced && str[i] == c)
+			is_spaced = 1;
+		i++;
+	}
+	return (strs);
+}
+
 static int	count_char(char *str, char c)
 {
 	int	i;
@@ -77,7 +100,7 @@ char	**ft_split(char const *s, char c)
 	i = 0;
 	if (!s)
 		return (NULL);
-	tab = malloc(sizeof(char *) * (ft_countwords(s) + 1));
+	tab = malloc(sizeof(char *) * (count_strs((char *)s, c) + 1));
 	if (!tab)
 		return (NULL);
 	tab = fill_tab(tab, (char *)s, c, i);
