@@ -12,6 +12,7 @@
 
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include "../includes/pipex.h"
 #include "../libft/libft.h"
@@ -24,7 +25,7 @@ int	main(int argc, char **argv, char **envp)
 	if (argc != 5)
 		return (1);
 	fd_infile = open(argv[1], O_RDONLY);
-	fd_outfile = open(argv[4], O_CREAT | O_WRONLY);
+	fd_outfile = open(argv[4], O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
 	if (fd_infile < 0 || fd_outfile < 0)
 		return (2);
 	close(fd_infile);
