@@ -108,7 +108,7 @@ int	main(int ac, char **av, char **envp)
 	data.fd_infile = open(av[1], O_RDONLY);
 	if (data.fd_infile < 0)
 		return (0);
-	data.fd_outfile = open(av[4], O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
+	data.fd_outfile = open(av[4], O_CREAT | O_WRONLY, O_TRUNC, S_IRUSR | S_IWUSR);
 	if (data.fd_outfile < 0)
 	{
 		close(data.fd_infile);
@@ -124,4 +124,5 @@ int	main(int ac, char **av, char **envp)
 		close_all(data);
 	execute_second_cmd(av, envp, data);
 	close_all(data);
+	// Check if each command exist, if it returns NULL, don't execve and exit.
 }

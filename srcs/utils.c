@@ -18,5 +18,5 @@ int	close_all(t_data data)
 	close(data.fd_outfile);
 	close(data.pipes[0]);
 	close(data.pipes[1]);
-	return (1);
+	return (0);
 }
