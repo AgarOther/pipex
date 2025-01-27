@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 14:58:55 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/27 01:01:38 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/27 17:17:30 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,12 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc != 5)
 		return (1);
-	cmd_1 = ft_split(argv[2], ' ');
-	cmd_2 = ft_split(argv[3], ' ');
 	fd_infile = open(argv[1], O_RDONLY);
 	if (fd_infile < 0)
-	{
-		ft_tabfree(cmd_1, ft_tablen((const char **)cmd_1));
 		return (2);
-	}
-	fd_outfile = open(argv[4], O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+	fd_outfile = open(argv[4], O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
 	if (fd_outfile < 0)
 	{
-		ft_tabfree(cmd_1, ft_tablen((const char **)cmd_1));
-		ft_tabfree(cmd_2, ft_tablen((const char **)cmd_2));
 		close(fd_infile);
 		return (3);
 	}
@@ -51,6 +44,8 @@ int	main(int argc, char **argv, char **envp)
 		close(fd_outfile);
 		return (4);
 	}
+	cmd_1 = ft_split(argv[2], ' ');
+	cmd_2 = ft_split(argv[3], ' ');
 	child_first = fork();
 	if (child_first == -1)
 		return (close_all_with_error(5, pipes, fd_infile, fd_outfile));
@@ -61,8 +56,12 @@ int	main(int argc, char **argv, char **envp)
 		if (dup2(pipes[1], STDOUT_FILENO) == -1)
 			return (close_all_with_error(7, pipes, fd_infile, fd_outfile));
 		close_all(pipes, fd_infile, fd_outfile);
-		if (execve(get_cmd_path(envp, cmd_1[0], 0), cmd_1, NULL) == -1)
+		if (execve(get_cmd_path(envp, cmd_1[0]), cmd_1, NULL) == -1)
+		{
+			ft_tabfree(cmd_1, ft_tablen((const char **)cmd_1));
+			ft_tabfree(cmd_2, ft_tablen((const char **)cmd_2));
 			return (close_all_with_error(8, pipes, fd_infile, fd_outfile));
+		}
 	}
 	else
 	{
@@ -76,8 +75,12 @@ int	main(int argc, char **argv, char **envp)
 			if (dup2(fd_outfile, STDOUT_FILENO) == -1)
 				return (close_all_with_error(11, pipes, fd_infile, fd_outfile));
 			close_all(pipes, fd_infile, fd_outfile);
-			if (execve(get_cmd_path(envp, cmd_2[0], 0), cmd_2, NULL) == -1)
+			if (execve(get_cmd_path(envp, cmd_2[0]), cmd_2, NULL) == -1)
+			{
+				ft_tabfree(cmd_1, ft_tablen((const char **)cmd_1));
+				ft_tabfree(cmd_2, ft_tablen((const char **)cmd_2));
 				return (close_all_with_error(12, pipes, fd_infile, fd_outfile));
+			}
 		}
 		else
 		{
