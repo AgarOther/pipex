@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 15:34:46 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/26 23:39:19 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/27 22:59:32 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	ft_strstartswith(const char *str, const char *cmp_str)
 {
 	int	i;
-	int cmp_len;
+	int	cmp_len;
 
 	i = 0;
 	cmp_len = ft_strlen(cmp_str);

@@ -5,92 +5,123 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/22 14:58:55 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/27 17:17:30 by scraeyme         ###   ########.fr       */
+/*   Created: 2025/01/27 22:51:23 by scraeyme          #+#    #+#             */
+/*   Updated: 2025/01/27 23:43:23 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include "../includes/pipex.h"
-#include "../libft/libft.h"
 
-int	main(int argc, char **argv, char **envp)
+static char	*get_path(char **cmd, char **envp, int i, int j)
 {
-	int		fd_infile;
-	int		fd_outfile;
-	int		pipes[2];
-	pid_t	child_first;
-	pid_t	child_second;
-	char	**cmd_1;
-	char	**cmd_2;
+	char	*tmp;
+	char	*path;
+	char	**path_finding;
 
-	if (argc != 5)
-		return (1);
-	fd_infile = open(argv[1], O_RDONLY);
-	if (fd_infile < 0)
-		return (2);
-	fd_outfile = open(argv[4], O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
-	if (fd_outfile < 0)
+	while (ft_strncmp(envp[i], "PATH=", 5))
+		i++;
+	if (ft_strlen(envp[i]) < 6)
+		return (NULL);
+	tmp = &envp[i][5];
+	path_finding = ft_split(tmp, ':');
+	if (!path_finding)
+		return (NULL);
+	while (path_finding[++j])
 	{
-		close(fd_infile);
-		return (3);
-	}
-	if (pipe(pipes) == -1)
-	{
-		close(fd_infile);
-		close(fd_outfile);
-		return (4);
-	}
-	cmd_1 = ft_split(argv[2], ' ');
-	cmd_2 = ft_split(argv[3], ' ');
-	child_first = fork();
-	if (child_first == -1)
-		return (close_all_with_error(5, pipes, fd_infile, fd_outfile));
-	if (child_first == 0)
-	{
-		if (dup2(fd_infile, STDIN_FILENO) == -1)
-			return (close_all_with_error(6, pipes, fd_infile, fd_outfile));
-		if (dup2(pipes[1], STDOUT_FILENO) == -1)
-			return (close_all_with_error(7, pipes, fd_infile, fd_outfile));
-		close_all(pipes, fd_infile, fd_outfile);
-		if (execve(get_cmd_path(envp, cmd_1[0]), cmd_1, NULL) == -1)
+		path = ft_strjoin(path_finding[j], "/");
+		path = ft_strjoin_free(path, cmd[0]);
+		if (!access(path, X_OK))
 		{
-			ft_tabfree(cmd_1, ft_tablen((const char **)cmd_1));
-			ft_tabfree(cmd_2, ft_tablen((const char **)cmd_2));
-			return (close_all_with_error(8, pipes, fd_infile, fd_outfile));
+			ft_tabfree(path_finding, ft_tablen((const char **)path_finding));
+			return (path);
 		}
+		free(path);
 	}
-	else
+	ft_tabfree(path_finding, ft_tablen((const char **)path_finding));
+	return (NULL);
+}
+
+static int	execute_second_cmd(char **av, char **envp, t_data data)
+{
+	pid_t	child_two;
+	char	**cmd;
+	char	*path;
+
+	child_two = fork();
+	if (child_two < 0)
+		return (0);
+	cmd = ft_split(av[3], ' ');
+	if (!cmd)
+		return (0);
+	if (child_two == 0)
 	{
-		child_second = fork();
-		if (child_second == -1)
-			return (close_all_with_error(9, pipes, fd_infile, fd_outfile));
-		else if (child_second == 0)
-		{
-			if (dup2(pipes[0], STDIN_FILENO) == -1)
-				return (close_all_with_error(10, pipes, fd_infile, fd_outfile));
-			if (dup2(fd_outfile, STDOUT_FILENO) == -1)
-				return (close_all_with_error(11, pipes, fd_infile, fd_outfile));
-			close_all(pipes, fd_infile, fd_outfile);
-			if (execve(get_cmd_path(envp, cmd_2[0]), cmd_2, NULL) == -1)
-			{
-				ft_tabfree(cmd_1, ft_tablen((const char **)cmd_1));
-				ft_tabfree(cmd_2, ft_tablen((const char **)cmd_2));
-				return (close_all_with_error(12, pipes, fd_infile, fd_outfile));
-			}
-		}
-		else
-		{
-			close_all(pipes, fd_infile, fd_outfile);
-			if (waitpid(child_first, NULL, 0) == -1)
-				return (close_all_with_error(13, pipes, fd_infile, fd_outfile));
-			if (waitpid(child_second, NULL, 0) == -1)
-				return (close_all_with_error(14, pipes, fd_infile, fd_outfile));
-			ft_tabfree(cmd_1, ft_tablen((const char **)cmd_1));
-			ft_tabfree(cmd_2, ft_tablen((const char **)cmd_2));
-		}
+		if (dup2(data.pipes[0], STDIN_FILENO) < 0)
+			return (0);
+		if (dup2(data.fd_outfile, STDOUT_FILENO) < 0)
+			return (0);
+		close_all(data);
+		path = get_path(cmd, envp, 0, -1);
+		if (execve(path, cmd, envp) < 0)
+			return (close_all(data));
 	}
+	close(data.pipes[1]);
+	waitpid(child_two, NULL, 0);
+	ft_tabfree(cmd, ft_tablen((const char **)cmd));
+	return (1);
+}
+
+static int	execute_first_cmd(char **av, char **envp, t_data data)
+{
+	pid_t	child_one;
+	char	**cmd;
+	char	*path;
+
+	child_one = fork();
+	if (child_one < 0)
+		return (0);
+	cmd = ft_split(av[2], ' ');
+	if (!cmd)
+		return (0);
+	if (child_one == 0)
+	{
+		if (dup2(data.fd_infile, STDIN_FILENO) < 0)
+			return (0);
+		if (dup2(data.pipes[1], STDOUT_FILENO) < 0)
+			return (0);
+		close_all(data);
+		path = get_path(cmd, envp, 0, -1);
+		if (execve(path, cmd, envp) < 0)
+			return (close_all(data));
+	}
+	close(data.pipes[1]);
+	waitpid(child_one, NULL, 0);
+	ft_tabfree(cmd, ft_tablen((const char **)cmd));
+	return (1);
+}
+
+int	main(int ac, char **av, char **envp)
+{
+	t_data	data;
+
+	if (ac != 5)
+		return (0);
+	data.fd_infile = open(av[1], O_RDONLY);
+	if (data.fd_infile < 0)
+		return (0);
+	data.fd_outfile = open(av[4], O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
+	if (data.fd_outfile < 0)
+	{
+		close(data.fd_infile);
+		return (0);
+	}
+	if (pipe(data.pipes) < 0)
+	{
+		close(data.fd_infile);
+		close(data.fd_outfile);
+		return (0);
+	}
+	if (!execute_first_cmd(av, envp, data))
+		close_all(data);
+	execute_second_cmd(av, envp, data);
+	close_all(data);
 }
