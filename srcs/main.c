@@ -33,10 +33,15 @@ int	main(int argc, char **argv, char **envp)
 	cmd_2 = ft_split(argv[3], ' ');
 	fd_infile = open(argv[1], O_RDONLY);
 	if (fd_infile < 0)
+	{
+		ft_tabfree(cmd_1, ft_tablen((const char **)cmd_1));
 		return (2);
+	}
 	fd_outfile = open(argv[4], O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
 	if (fd_outfile < 0)
 	{
+		ft_tabfree(cmd_1, ft_tablen((const char **)cmd_1));
+		ft_tabfree(cmd_2, ft_tablen((const char **)cmd_2));
 		close(fd_infile);
 		return (3);
 	}
@@ -76,13 +81,13 @@ int	main(int argc, char **argv, char **envp)
 		}
 		else
 		{
+			close_all(pipes, fd_infile, fd_outfile);
 			if (waitpid(child_first, NULL, 0) == -1)
 				return (close_all_with_error(13, pipes, fd_infile, fd_outfile));
 			if (waitpid(child_second, NULL, 0) == -1)
 				return (close_all_with_error(14, pipes, fd_infile, fd_outfile));
-			close_all(pipes, fd_infile, fd_outfile);
+			ft_tabfree(cmd_1, ft_tablen((const char **)cmd_1));
+			ft_tabfree(cmd_2, ft_tablen((const char **)cmd_2));
 		}
 	}
-	ft_tabfree(cmd_1, ft_tablen((const char **)cmd_1));
-	ft_tabfree(cmd_2, ft_tablen((const char **)cmd_2));
 }
