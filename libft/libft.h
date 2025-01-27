@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 20:21:22 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/24 15:35:08 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/27 00:08:05 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,13 @@ char	**ft_split(char const *s, char c);
 int		ft_countwords(const char *str);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin_free(char const *s1, char const *s2);
 char	*ft_strtrim(char const *s1);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 int		ft_stroccur(char *str, int c);
 int		ft_strcharindex(char *str, char c);
-int		str_starts_with(const char *str, const char *cmp_str);
+int		ft_strstartswith(const char *str, const char *cmp_str);
 void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);

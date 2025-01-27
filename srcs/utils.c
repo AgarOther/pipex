@@ -6,55 +6,52 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 13:59:52 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/24 15:35:13 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/27 01:02:20 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft/libft.h"
 
-static void	execute_command(char **paths, char **argv)
+char	*get_cmd_path(char **envp, char *cmd, int i)
 {
-	char	**cmd_args;
-	char	*program_path;
-	int		i;
-
-	i = 0;
-	cmd_args = ft_split(argv[2], ' ');
-	while (paths[i])
-	{
-		paths[i] = ft_strjoin(paths[i], "/");
-		program_path = ft_strjoin(paths[i], cmd_args[0]);
-		free(paths[i]);
-		if (!access(program_path, X_OK))
-		{
-			execve(program_path, &cmd_args[0], NULL);
-			ft_tabfree(cmd_args, ft_tablen((const char **)cmd_args));
-			free(program_path);
-			exit(1);
-		}
-		free(program_path);
-		i++;
-	}
-	ft_tabfree(cmd_args, ft_tablen((const char **)cmd_args));
-}
-
-void	parse_and_execute(char **argv, char **envp)
-{
-	int		i;
 	char	*envp_path;
+	char	*program_path;
 	char	**paths;
 
-	i = 0;
-	while (!str_starts_with(envp[i], "PATH="))
+	while (!ft_strstartswith(envp[i], "PATH="))
 		i++;
 	envp_path = ft_substr(envp[i], 5, ft_strlen(envp[i]) - 5);
 	paths = ft_split(envp_path, ':');
 	free(envp_path);
-	execute_command(paths, argv);
+	i = -1;
+	while (paths[++i])
+	{
+		paths[i] = ft_strjoin_free(paths[i], "/");
+		program_path = ft_strjoin(paths[i], cmd);
+		if (!access(program_path, X_OK))
+		{
+			free(cmd);
+			ft_tabfree(paths, ft_tablen((const char **)paths));
+			return (program_path);
+		}
+		free(program_path);
+	}
+	free(cmd);
+	ft_tabfree(paths, ft_tablen((const char **)paths));
+	return (NULL);
 }
 
-int	ft_error(int error_code, char *message)
+void	close_all(int pipes[2], int fd_infile, int fd_outfile)
 {
-	ft_putendl_fd(message, 1);
+	// Might be the issue tbh
+	close(pipes[0]);
+	close(pipes[1]);
+	close(fd_infile);
+	close(fd_outfile);
+}
+
+int	close_all_with_error(int error_code, int pipes[2], int fd_infile, int fd_outfile)
+{
+	close_all(pipes, fd_infile, fd_outfile);
 	return (error_code);
 }

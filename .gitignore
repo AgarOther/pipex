@@ -2,3 +2,7 @@ infile.txt
 outfile.txt
 .vscode/
 *.o
+*.a
+infile
+outfile
+pipex

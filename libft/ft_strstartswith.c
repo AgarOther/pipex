@@ -6,13 +6,13 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 15:34:46 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/24 15:34:57 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/26 23:39:19 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	str_starts_with(const char *str, const char *cmp_str)
+int	ft_strstartswith(const char *str, const char *cmp_str)
 {
 	int	i;
 	int cmp_len;

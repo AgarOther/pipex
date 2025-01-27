@@ -1,21 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_strjoin_free.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/22 15:04:25 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/27 00:58:01 by scraeyme         ###   ########.fr       */
+/*   Created: 2025/01/27 00:07:36 by scraeyme          #+#    #+#             */
+/*   Updated: 2025/01/27 00:08:30 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
-# include <unistd.h>
+#include "libft.h"
 
-char	*get_cmd_path(char **envp, char *cmd, int i);
-void	close_all(int pipes[2], int fd_infile, int fd_outfile);
-int		close_all_with_error(int error_code, int pipes[2], int fd_infile, int fd_outfile);
+char	*ft_strjoin_free(char const *s1, char const *s2)
+{
+	char	*str;
+	size_t	i;
+	size_t	j;
 
-#endif
+	i = 0;
+	j = 0;
+	if (!s1 || !s2)
+		return (NULL);
+	str = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!str)
+		return (NULL);
+	while (s1[i])
+		str[j++] = s1[i++];
+	i = 0;
+	while (s2[i])
+		str[j++] = s2[i++];
+	str[j] = 0;
+	free((char *)s1);
+	return (str);
+}
