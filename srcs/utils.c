@@ -42,9 +42,9 @@ char	*get_path(char **cmd, char **envp)
 	char	*path;
 	char	**path_finding;
 
-	i = 0;
-	if (ft_strchr(cmd[0], '/'))
+	if (!access(cmd[0], X_OK))
 		return (cmd[0]);
+	i = 0;
 	while (ft_strncmp(envp[i], "PATH=", 5))
 		i++;
 	if (ft_strlen(envp[i]) < 6)
