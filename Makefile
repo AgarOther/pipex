@@ -6,7 +6,7 @@ CFLAGS				=	-Wall -Wextra -Werror -g
 NAME				=	pipex
 
 # Sources & Includes
-SRCS				= 	srcs/main.c \
+SRCS				= 	srcs/main_bonus.c \
 						srcs/utils.c
 OBJ_FOLDER			=	objs
 LIB					=	libft/libft.a

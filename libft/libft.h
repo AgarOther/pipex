@@ -63,6 +63,7 @@ void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 int		ft_stroccur(char *str, int c);
 int		ft_strcharindex(char *str, char c);
 int		ft_strstartswith(const char *str, const char *cmp_str);
+int		ft_strcontains(char *s1, char *s2);
 void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);

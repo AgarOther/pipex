@@ -10,8 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef PIPEX_BONUS_H
+# define PIPEX_BONUS_H
+# define TMP_FILEPATH "/tmp/pipex_tmp_fd"
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -24,6 +25,7 @@ typedef struct s_data
 	int		fd_infile;
 	int		fd_outfile;
 	int		pipes[2];
+	int		here_doc;
 }				t_data;
 
 // Utils
