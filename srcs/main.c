@@ -6,42 +6,13 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 22:51:23 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/27 23:43:23 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/28 11:47:15 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
 
-static char	*get_path(char **cmd, char **envp, int i, int j)
-{
-	char	*tmp;
-	char	*path;
-	char	**path_finding;
-
-	while (ft_strncmp(envp[i], "PATH=", 5))
-		i++;
-	if (ft_strlen(envp[i]) < 6)
-		return (NULL);
-	tmp = &envp[i][5];
-	path_finding = ft_split(tmp, ':');
-	if (!path_finding)
-		return (NULL);
-	while (path_finding[++j])
-	{
-		path = ft_strjoin(path_finding[j], "/");
-		path = ft_strjoin_free(path, cmd[0]);
-		if (!access(path, X_OK))
-		{
-			ft_tabfree(path_finding, ft_tablen((const char **)path_finding));
-			return (path);
-		}
-		free(path);
-	}
-	ft_tabfree(path_finding, ft_tablen((const char **)path_finding));
-	return (NULL);
-}
-
-static int	execute_second_cmd(char **av, char **envp, t_data data)
+static pid_t	execute_second_cmd(char **av, char **envp, t_data data)
 {
 	pid_t	child_two;
 	char	**cmd;
@@ -60,17 +31,16 @@ static int	execute_second_cmd(char **av, char **envp, t_data data)
 		if (dup2(data.fd_outfile, STDOUT_FILENO) < 0)
 			return (0);
 		close_all(data);
-		path = get_path(cmd, envp, 0, -1);
-		if (execve(path, cmd, envp) < 0)
-			return (close_all(data));
+		path = get_path(cmd, envp);
+		if (!path || execve(path, cmd, envp) < 0)
+			return (close_all_and_tabfree(data, cmd));
 	}
-	close(data.pipes[1]);
-	waitpid(child_two, NULL, 0);
+	close(data.pipes[0]);
 	ft_tabfree(cmd, ft_tablen((const char **)cmd));
-	return (1);
+	return (child_two);
 }
 
-static int	execute_first_cmd(char **av, char **envp, t_data data)
+static pid_t	execute_first_cmd(char **av, char **envp, t_data data)
 {
 	pid_t	child_one;
 	char	**cmd;
@@ -89,26 +59,43 @@ static int	execute_first_cmd(char **av, char **envp, t_data data)
 		if (dup2(data.pipes[1], STDOUT_FILENO) < 0)
 			return (0);
 		close_all(data);
-		path = get_path(cmd, envp, 0, -1);
-		if (execve(path, cmd, envp) < 0)
-			return (close_all(data));
+		path = get_path(cmd, envp);
+		if (!path || execve(path, cmd, envp) < 0)
+			return (close_all_and_tabfree(data, cmd));
 	}
 	close(data.pipes[1]);
-	waitpid(child_one, NULL, 0);
 	ft_tabfree(cmd, ft_tablen((const char **)cmd));
-	return (1);
+	return (child_one);
+}
+
+static int	execute_cmds(char **av, char **envp, t_data data)
+{
+	pid_t	child_one;
+	pid_t	child_two;
+
+	child_one = execute_first_cmd(av, envp, data);
+	if (!child_one)
+		return (close_all(data));
+	child_two = execute_second_cmd(av, envp, data);
+	if (!child_two)
+		return (close_all(data));
+	waitpid(child_one, NULL, 0);
+	waitpid(child_two, NULL, 0);
+	close(data.fd_infile);
+	close(data.fd_outfile);
+	return (0);
 }
 
 int	main(int ac, char **av, char **envp)
 {
 	t_data	data;
 
-	if (ac != 5)
+	if (ac != 5 || ft_tabhasemptystr(av))
 		return (0);
 	data.fd_infile = open(av[1], O_RDONLY);
 	if (data.fd_infile < 0)
 		return (0);
-	data.fd_outfile = open(av[4], O_CREAT | O_WRONLY, O_TRUNC, S_IRUSR | S_IWUSR);
+	data.fd_outfile = open(av[4], O_CREAT | O_WRONLY | O_TRUNC, 0777);
 	if (data.fd_outfile < 0)
 	{
 		close(data.fd_infile);
@@ -120,9 +107,5 @@ int	main(int ac, char **av, char **envp)
 		close(data.fd_outfile);
 		return (0);
 	}
-	if (!execute_first_cmd(av, envp, data))
-		close_all(data);
-	execute_second_cmd(av, envp, data);
-	close_all(data);
-	// Check if each command exist, if it returns NULL, don't execve and exit.
+	return (execute_cmds(av, envp, data));
 }

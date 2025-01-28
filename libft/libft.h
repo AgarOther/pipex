@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 20:21:22 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/27 00:08:05 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/28 11:45:46 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 void	ft_tabfree(char **tab, int size);
 void	ft_tabprint(char **tab, int endl);
+int		ft_tabhasemptystr(char **tab);
 char	**ft_tabdup(char **tab, int size);
 void	ft_lstprint(t_list *lst, int endl);
 t_list	*ft_lstnew(char *new );

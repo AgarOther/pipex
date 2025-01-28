@@ -51,6 +51,7 @@ SRCS =	ft_atoi.c \
 		ft_tablen.c \
 		ft_tabfree.c \
 		ft_tabprint.c \
+		ft_tabhasemptystr.c \
 		ft_tabdup.c \
 		ft_lstnew.c \
 		ft_lstadd_front.c \

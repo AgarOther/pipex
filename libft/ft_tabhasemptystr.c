@@ -1,33 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_tabhasemptystr.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/27 22:54:36 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/28 11:36:25 by scraeyme         ###   ########.fr       */
+/*   Created: 2025/01/28 11:44:09 by scraeyme          #+#    #+#             */
+/*   Updated: 2025/01/28 11:45:32 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
-# include <sys/wait.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <fcntl.h>
-# include "../libft/libft.h"
-
-typedef struct s_data
+int	ft_tabhasemptystr(char **tab)
 {
-	int		fd_infile;
-	int		fd_outfile;
-	int		pipes[2];
-}				t_data;
+	int	i;
 
-// Utils
-int		close_all(t_data data);
-int		close_all_and_tabfree(t_data data, char **tab);
-char	*get_path(char **cmd, char **envp);
-
-#endif
+	i = 0;
+	while (tab[i])
+	{
+		if (!tab[i][0])
+			return (1);
+		i++;
+	}
+	return (0);
+}
