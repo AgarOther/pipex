@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 22:51:23 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/28 11:47:15 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/28 17:29:46 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,9 @@ static pid_t	execute_first_cmd(char **av, char **envp, t_data data)
 static int	execute_cmds(char **av, char **envp, t_data data)
 {
 	pid_t	child_one;
+	int		status_one;
 	pid_t	child_two;
+	int		status_two;
 
 	child_one = execute_first_cmd(av, envp, data);
 	if (!child_one)
@@ -79,8 +81,16 @@ static int	execute_cmds(char **av, char **envp, t_data data)
 	child_two = execute_second_cmd(av, envp, data);
 	if (!child_two)
 		return (close_all(data));
-	waitpid(child_one, NULL, 0);
-	waitpid(child_two, NULL, 0);
+	if (waitpid(child_one, &status_one, 0) < 0)
+	{
+		close_all(data);
+		return (status_one);
+	}
+	else if (waitpid(child_two, &status_two, 0) < 0)
+	{
+		close_all(data);
+		return (status_two);
+	}
 	close(data.fd_infile);
 	close(data.fd_outfile);
 	return (0);
