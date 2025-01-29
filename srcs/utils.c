@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 23:00:45 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/28 11:41:55 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:19:04 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ char	*get_path(char **cmd, char **envp)
 	if (!path_finding)
 		return (NULL);
 	path = iterate_paths(cmd, path_finding);
-	ft_tabfree(path_finding, ft_tablen((const char **)path_finding));
 	return (path);
 }
 

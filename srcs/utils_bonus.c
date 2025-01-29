@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 11:10:44 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/29 11:10:44 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:25:58 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static char	*iterate_paths(char **cmd, char **path_finding)
 		free(path);
 		i++;
 	}
+	ft_tabfree(path_finding, ft_tablen((const char **)path_finding));
 	return (NULL);
 }
 
@@ -54,18 +55,23 @@ char	*get_path(char **cmd, char **envp)
 	if (!path_finding)
 		return (NULL);
 	path = iterate_paths(cmd, path_finding);
-	ft_tabfree(path_finding, ft_tablen((const char **)path_finding));
 	return (path);
+}
+
+int	close_fds(t_data data)
+{
+	close(data.fd_infile);
+	close(data.fd_outfile);
+	return (0);
 }
 
 int	close_all(t_data data)
 {
-	close(data.fd_infile);
-	if (data.here_doc)
-		unlink(TMP_FILEPATH);
-	close(data.fd_outfile);
+	close_fds(data);
 	close(data.pipes[0]);
 	close(data.pipes[1]);
+	if (data.here_doc)
+		unlink(TMP_FILEPATH);
 	return (0);
 }
 

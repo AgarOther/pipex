@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 23:42:13 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/28 23:42:13 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:25:40 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,32 +68,32 @@ static pid_t	execute_first_cmd(char **av, char **envp, t_data data)
 	return (child_one);
 }
 
-static int	execute_cmds(char **av, char **envp, t_data *data)
+static int	execute_cmds(char **av, char **envp, t_data data)
 {
 	pid_t	child_one;
 	int		status_one;
 	pid_t	child_two;
 	int		status_two;
 
-	data->here_doc = 0;
-	child_one = execute_first_cmd(av, envp, *data);
+	child_one = execute_first_cmd(av, envp, data);
 	if (!child_one)
-		return (close_all(*data));
-	child_two = execute_second_cmd(av, envp, *data);
+		return (close_all(data));
+	child_two = execute_second_cmd(av, envp, data);
 	if (!child_two)
-		return (close_all(*data));
+		return (close_all(data));
 	if (waitpid(child_one, &status_one, 0) < 0)
 	{
-		close_all(*data);
+		close_all(data);
 		return (status_one);
 	}
 	else if (waitpid(child_two, &status_two, 0) < 0)
 	{
-		close_all(*data);
+		close_all(data);
 		return (status_two);
 	}
-	close(data->fd_infile);
-	close(data->fd_outfile);
+	close_fds(data);
+	if (data.here_doc)
+		unlink(TMP_FILEPATH);
 	return (0);
 }
 
@@ -113,9 +113,9 @@ static void	ft_heredoc(char **av, t_data *data)
 		if (str)
 			ft_putstr_fd("> ", 1);
 		str = get_next_line(1);
-		write(tmp_fd, str, ft_strlen(str));
 		if (ft_strcontains(str, av[2]))
 			break ;
+		write(tmp_fd, str, ft_strlen(str));
 		free(str);
 	}
 	free(str);
@@ -127,6 +127,7 @@ int	main(int ac, char **av, char **envp)
 {
 	t_data	data;
 
+	data.here_doc = 0;
 	if (ac < 5 || ac > 6 || ft_tabhasemptystr(av)
 		|| (ac == 6 && ft_strncmp(av[1], "here_doc", 8)))
 		return (0);
@@ -144,10 +145,6 @@ int	main(int ac, char **av, char **envp)
 		return (0);
 	}
 	if (pipe(data.pipes) < 0)
-	{
-		close(data.fd_infile);
-		close(data.fd_outfile);
-		return (0);
-	}
-	return (execute_cmds(av, envp, &data));
+		return (close_fds(data));
+	return (execute_cmds(av, envp, data));
 }

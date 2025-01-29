@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 22:54:36 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/28 11:36:25 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:25:02 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_data
 }				t_data;
 
 // Utils
+int		close_fds(t_data data);
 int		close_all(t_data data);
 int		close_all_and_tabfree(t_data data, char **tab);
 char	*get_path(char **cmd, char **envp);

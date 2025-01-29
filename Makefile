@@ -4,16 +4,20 @@ CFLAGS				=	-Wall -Wextra -Werror -g
 
 # Names
 NAME				=	pipex
+NAME_BONUS			=	pipex_bonus
 
 # Sources & Includes
-SRCS				= 	srcs/main_bonus.c \
+SRCS				= 	srcs/main.c \
 						srcs/utils.c
+SRCS_BONUS			= 	srcs/main_bonus.c \
+						srcs/utils_bonus.c
 OBJ_FOLDER			=	objs
 LIB					=	libft/libft.a
 INCLUDES			=	includes
 
 # Objects
 OBJS				=	$(patsubst srcs/%.c, $(OBJ_FOLDER)/%.o, $(SRCS))
+OBJS_BONUS			=	$(patsubst srcs/%.c, $(OBJ_FOLDER)/%.o, $(SRCS_BONUS))
 
 # Custom Makefile Flags
 MAKEFLAGS			+=	--no-print-directory --silent
@@ -25,6 +29,7 @@ RESET				=	\033[0m
 
 # Custom messages
 EXE_DONE			=	@echo "🎉$(PURPLE) $(NAME) compiled! 🎉$(RESET)\n"
+BONUS_DONE			=	@echo "🎉$(PURPLE) $(NAME_BONUS) compiled! 🎉$(RESET)\n"
 ALL_CLEAN			=	@echo "🧹$(LIGHT_GREEN) Project's objects cleaned! 🧹$(RESET)\n"
 ALL_FCLEAN			=	@echo "🧹$(LIGHT_GREEN) Project's objects & Executables cleaned! 🧹$(RESET)\n"
 
@@ -42,9 +47,23 @@ check_relink:
 		$(MAKE) $(NAME); \
 	fi
 
+bonus :
+	@if [ ! -d $(OBJ_FOLDER) ]; then \
+		mkdir $(OBJ_FOLDER); \
+	fi
+	@if [ -f $(NAME_BONUS) ]; then \
+		echo '✅$(LIGHT_GREEN) Nothing to be done for "all"! ✅$(RESET)\n'; \
+	else \
+		$(MAKE) $(NAME_BONUS); \
+	fi
+
 $(NAME): libft $(OBJS)
 	@$(CC) $(CFLAGS) $(OBJS) $(LIB) -o $(NAME) -I $(INCLUDES)
 	$(EXE_DONE)
+
+$(NAME_BONUS): libft $(OBJS_BONUS)
+	@$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIB) -o $(NAME_BONUS) -I $(INCLUDES)
+	$(BONUS_DONE)
 
 $(OBJ_FOLDER)/%.o: srcs/%.c
 	@$(CC) $(CFLAGS) -c $< -o $@
@@ -62,6 +81,7 @@ clean :
 fclean :
 	$(MAKE) fclean -C ./libft
 	@rm -f $(NAME)
+	@rm -f $(NAME_BONUS)
 	@rm -rf $(OBJ_FOLDER)
 	$(ALL_FCLEAN)
 
@@ -69,4 +89,6 @@ re : fclean all
 
 f : $(NAME)
 
-.PHONY: all clean fclean re libft f
+fb : $(NAME_BONUS)
+
+.PHONY: all clean fclean re libft f bonus fb
