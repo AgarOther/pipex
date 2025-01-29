@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 23:42:13 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/29 14:25:40 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:47:49 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ static void	ft_heredoc(char **av, t_data *data)
 		if (str)
 			ft_putstr_fd("> ", 1);
 		str = get_next_line(1);
-		if (ft_strcontains(str, av[2]))
+		if (ft_strlencmp(str, av[2], 1) == 0)
 			break ;
 		write(tmp_fd, str, ft_strlen(str));
 		free(str);

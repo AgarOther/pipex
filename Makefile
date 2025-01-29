@@ -87,8 +87,10 @@ fclean :
 
 re : fclean all
 
+rebonus : fclean bonus
+
 f : $(NAME)
 
 fb : $(NAME_BONUS)
 
-.PHONY: all clean fclean re libft f bonus fb
+.PHONY: all clean fclean re libft f bonus fb rebonus
