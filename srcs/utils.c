@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 23:00:45 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/30 15:02:06 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/30 16:45:18 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,21 +58,27 @@ char	*get_path(char **cmd, char **envp)
 	return (path);
 }
 
+int	close_files(t_data data)
+{
+	if (data.fd_infile < 0)
+			close(data.fd_infile);
+	if (data.fd_outfile < 0)
+			close(data.fd_outfile);
+	return (1);
+}
+
 int	close_all(t_data data)
 {
-	close(data.fd_infile);
-	close(data.fd_outfile);
+	close_files(data);
 	close(data.pipes[0]);
 	close(data.pipes[1]);
 	return (0);
 }
-
+#include <stdio.h>
 int	close_all_and_tabfree(t_data data, char **tab)
 {
-	close(data.fd_infile);
-	close(data.fd_outfile);
-	close(data.pipes[0]);
-	close(data.pipes[1]);
+	close_all(data);
 	ft_tabfree(tab, ft_tablen((const char **)tab));
+	perror("Error\n");
 	exit(0);
 }
