@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 23:42:13 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/29 14:47:49 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/30 15:08:56 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,8 @@ static pid_t	execute_second_cmd(char **av, char **envp, t_data data)
 		return (0);
 	if (child_two == 0)
 	{
-		if (dup2(data.pipes[0], STDIN_FILENO) < 0)
-			return (0);
-		if (dup2(data.fd_outfile, STDOUT_FILENO) < 0)
+		if (dup2(data.pipes[0], STDIN_FILENO) < 0
+			|| dup2(data.fd_outfile, STDOUT_FILENO) < 0)
 			return (0);
 		close_all(data);
 		path = get_path(cmd, envp);
@@ -54,9 +53,8 @@ static pid_t	execute_first_cmd(char **av, char **envp, t_data data)
 		return (0);
 	if (child_one == 0)
 	{
-		if (dup2(data.fd_infile, STDIN_FILENO) < 0)
-			return (0);
-		if (dup2(data.pipes[1], STDOUT_FILENO) < 0)
+		if (dup2(data.fd_infile, STDIN_FILENO) < 0
+			|| dup2(data.pipes[1], STDOUT_FILENO) < 0)
 			return (0);
 		close_all(data);
 		path = get_path(cmd, envp);
@@ -131,12 +129,10 @@ int	main(int ac, char **av, char **envp)
 	if (ac < 5 || ac > 6 || ft_tabhasemptystr(av)
 		|| (ac == 6 && ft_strncmp(av[1], "here_doc", 8)))
 		return (0);
-	if (ac == 6 && !ft_strncmp(av[1], "here_doc", 8))
+	if (!ft_strncmp(av[1], "here_doc", 8))
 		ft_heredoc(av, &data);
 	else
 		data.fd_infile = open(av[1], O_RDONLY);
-	if (data.fd_infile < 0)
-		return (0);
 	data.fd_outfile = open(av[4 + data.here_doc],
 			O_CREAT | O_WRONLY | O_TRUNC, 0777);
 	if (data.fd_outfile < 0)
@@ -144,7 +140,7 @@ int	main(int ac, char **av, char **envp)
 		close(data.fd_infile);
 		return (0);
 	}
-	if (pipe(data.pipes) < 0)
+	if (data.fd_infile < 0 || pipe(data.pipes) < 0)
 		return (close_fds(data));
 	return (execute_cmds(av, envp, data));
 }

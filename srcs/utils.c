@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 23:00:45 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/29 14:19:04 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/30 15:02:06 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static char	*iterate_paths(char **cmd, char **path_finding)
 		free(path);
 		i++;
 	}
+	ft_tabfree(path_finding, ft_tablen((const char **)path_finding));
 	return (NULL);
 }
 

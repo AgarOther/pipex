@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 22:51:23 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/29 13:44:48 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/30 15:26:29 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,8 @@ static pid_t	execute_second_cmd(char **av, char **envp, t_data data)
 		return (0);
 	if (child_two == 0)
 	{
-		if (dup2(data.pipes[0], STDIN_FILENO) < 0)
-			return (0);
-		if (dup2(data.fd_outfile, STDOUT_FILENO) < 0)
+		if (dup2(data.pipes[0], STDIN_FILENO) < 0
+			|| dup2(data.fd_outfile, STDOUT_FILENO) < 0)
 			return (0);
 		close_all(data);
 		path = get_path(cmd, envp);
@@ -54,9 +53,8 @@ static pid_t	execute_first_cmd(char **av, char **envp, t_data data)
 		return (0);
 	if (child_one == 0)
 	{
-		if (dup2(data.fd_infile, STDIN_FILENO) < 0)
-			return (0);
-		if (dup2(data.pipes[1], STDOUT_FILENO) < 0)
+		if (dup2(data.fd_infile, STDIN_FILENO) < 0
+			|| dup2(data.pipes[1], STDOUT_FILENO) < 0)
 			return (0);
 		close_all(data);
 		path = get_path(cmd, envp);
@@ -103,15 +101,13 @@ int	main(int ac, char **av, char **envp)
 	if (ac != 5 || ft_tabhasemptystr(av))
 		return (0);
 	data.fd_infile = open(av[1], O_RDONLY);
-	if (data.fd_infile < 0)
-		return (0);
 	data.fd_outfile = open(av[4], O_CREAT | O_WRONLY | O_TRUNC, 0777);
 	if (data.fd_outfile < 0)
 	{
 		close(data.fd_infile);
 		return (0);
 	}
-	if (pipe(data.pipes) < 0)
+	if (data.fd_infile < 0 || pipe(data.pipes) < 0)
 	{
 		close(data.fd_infile);
 		close(data.fd_outfile);
