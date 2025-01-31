@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 23:00:45 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/31 00:44:04 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/31 12:15:08 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ char	*get_path(char **cmd, char **envp)
 
 int	close_files(t_data data)
 {
-	if (data.fd_infile > 0)
+	if (data.fd_infile >= 0)
 		close(data.fd_infile);
-	if (data.fd_outfile > 0)
+	if (data.fd_outfile >= 0)
 		close(data.fd_outfile);
 	return (1);
 }

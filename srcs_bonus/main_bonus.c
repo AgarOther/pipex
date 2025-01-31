@@ -6,11 +6,11 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 23:42:13 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/31 01:41:24 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/31 12:15:19 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/pipex_bonus.h"
+#include "../includes_bonus/pipex_bonus.h"
 
 static void	execute_childcmd(int fd_in, int fd_out, int i, t_data data)
 {
@@ -20,6 +20,7 @@ static void	execute_childcmd(int fd_in, int fd_out, int i, t_data data)
 	if (dup2(fd_in, STDIN_FILENO) < 0 || dup2(fd_out, STDOUT_FILENO) < 0)
 	{
 		perror("Error: Dup2 failed on command. ");
+		close_all(data, 1);
 		exit(-1);
 	}
 	close_all(data, 1);
@@ -49,18 +50,18 @@ static int	execute_cmds(int fd_in, int fd_out, t_data data)
 			return (close_all(data, 1));
 		else if (data.children[i] == 0)
 			execute_childcmd(fd_in, fd_out, i, data);
-		if (fd_out != data.fd_outfile)
+		if (fd_out != data.fd_outfile && fd_out >= 0)
 			close(fd_out);
-		if (fd_out != data.fd_infile)
+		if (fd_out != data.fd_infile && fd_in >= 0)
 			close(fd_in);
 		if (i == data.pipes_amount)
 			break ;
 		fd_in = data.pipes[i][0];
-		i++;
 		if (i < data.pipes_amount - 1)
 			fd_out = data.pipes[i + 1][1];
 		else
 			fd_out = data.fd_outfile;
+		i++;
 	}
 	i = -1;
 	errno = 0;
@@ -135,7 +136,7 @@ int	main(int ac, char **av, char **envp)
 		ft_heredoc(av, &data);
 	else
 		data.fd_infile = open(av[1], O_RDONLY);
-	data.fd_outfile = open(av[4 + data.here_doc],
+	data.fd_outfile = open(av[ac - 1],
 			O_CREAT | O_WRONLY | O_TRUNC, 0777);
 	data.pipes = get_pipes(ac, &data);
 	if (!data.pipes)

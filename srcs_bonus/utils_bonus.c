@@ -6,11 +6,11 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 11:10:44 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/31 01:39:16 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/31 12:15:02 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/pipex_bonus.h"
+#include "../includes_bonus/pipex_bonus.h"
 
 static char	*iterate_paths(char **cmd, char **path_finding)
 {
@@ -60,9 +60,9 @@ char	*get_path(char **cmd, char **envp)
 
 int	close_files(t_data data)
 {
-	if (data.fd_infile > 0)
+	if (data.fd_infile >= 0)
 		close(data.fd_infile);
-	if (data.fd_outfile > 0)
+	if (data.fd_outfile >= 0)
 		close(data.fd_outfile);
 	return (1);
 }

@@ -3,21 +3,21 @@ CC					=	cc
 CFLAGS				=	-Wall -Wextra -Werror -g
 
 # Names
-NAME				=	pipex
-NAME_BONUS			=	pipex_bonus
-
+NAME				=	pipexxx
+NAME_BONUS			=	pipex
 # Sources & Includes
 SRCS				= 	srcs/main.c \
 						srcs/utils.c
-SRCS_BONUS			= 	srcs/main_bonus.c \
-						srcs/utils_bonus.c
+SRCS_BONUS			= 	srcs_bonus/main_bonus.c \
+						srcs_bonus/utils_bonus.c
 OBJ_FOLDER			=	objs
 LIB					=	libft/libft.a
 INCLUDES			=	includes
+INCLUDES_BONUS			=	includes_bonus
 
 # Objects
 OBJS				=	$(patsubst srcs/%.c, $(OBJ_FOLDER)/%.o, $(SRCS))
-OBJS_BONUS			=	$(patsubst srcs/%.c, $(OBJ_FOLDER)/%.o, $(SRCS_BONUS))
+OBJS_BONUS			=	$(patsubst srcs_bonus/%.c, $(OBJ_FOLDER)/%.o, $(SRCS_BONUS))
 
 # Custom Makefile Flags
 MAKEFLAGS			+=	--no-print-directory --silent
@@ -62,10 +62,13 @@ $(NAME): libft $(OBJS)
 	$(EXE_DONE)
 
 $(NAME_BONUS): libft $(OBJS_BONUS)
-	@$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIB) -o $(NAME_BONUS) -I $(INCLUDES)
+	@$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIB) -o $(NAME_BONUS) -I $(INCLUDES_BONUS)
 	$(BONUS_DONE)
 
 $(OBJ_FOLDER)/%.o: srcs/%.c
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_FOLDER)/%.o: srcs_bonus/%.c
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 libft : 
