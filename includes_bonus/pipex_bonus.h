@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 22:54:36 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/31 00:10:57 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/31 13:32:49 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,11 @@ typedef struct s_data
 int		close_files(t_data data);
 int		close_all(t_data data, int free_children);
 int		close_all_and_tabfree(t_data data, char **tab);
+int		close_pipes(t_data data, int needs_free);
+
+// Cmds helper
 char	*get_path(char **cmd, char **envp);
+int		manage_fds(int *fd_in, int *fd_out, int i, t_data data);
+void	execute_childcmd(int fd_in, int fd_out, int i, t_data data);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 10:37:03 by scraeyme          #+#    #+#             */
-/*   Updated: 2024/11/08 22:30:20 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/31 13:23:19 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,4 +23,5 @@ void	ft_tabfree(char **tab, int size)
 		i++;
 	}
 	free(tab);
+	tab = NULL;
 }

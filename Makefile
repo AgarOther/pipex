@@ -3,14 +3,15 @@ CC					=	cc
 CFLAGS				=	-Wall -Wextra -Werror -g
 
 # Names
-NAME				=	pipex
-NAME_BONUS			=	pipex_bonus
+NAME				=	pipexxx
+NAME_BONUS			=	pipex
 
 # Sources & Includes
 SRCS				= 	srcs/main.c \
 						srcs/utils.c
 SRCS_BONUS			= 	srcs_bonus/main_bonus.c \
-						srcs_bonus/utils_bonus.c
+						srcs_bonus/utils_bonus.c \
+						srcs_bonus/cmdhelper_bonus.c
 OBJ_FOLDER			=	objs
 LIB					=	libft/libft.a
 INCLUDES			=	includes
