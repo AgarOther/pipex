@@ -3,8 +3,9 @@ CC					=	cc
 CFLAGS				=	-Wall -Wextra -Werror -g
 
 # Names
-NAME				=	pipexxx
-NAME_BONUS			=	pipex
+NAME				=	pipex
+NAME_BONUS			=	pipex_bonus
+
 # Sources & Includes
 SRCS				= 	srcs/main.c \
 						srcs/utils.c
@@ -13,7 +14,7 @@ SRCS_BONUS			= 	srcs_bonus/main_bonus.c \
 OBJ_FOLDER			=	objs
 LIB					=	libft/libft.a
 INCLUDES			=	includes
-INCLUDES_BONUS			=	includes_bonus
+INCLUDES_BONUS		=	includes_bonus
 
 # Objects
 OBJS				=	$(patsubst srcs/%.c, $(OBJ_FOLDER)/%.o, $(SRCS))
