@@ -13,6 +13,7 @@
 #ifndef PIPEX_BONUS_H
 # define PIPEX_BONUS_H
 # define TMP_FILEPATH "/tmp/pipex_tmp_fd"
+# define EXIT_CODE_OFFSET 128
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -34,6 +35,7 @@ typedef struct s_data
 }				t_data;
 
 // Utils
+int		get_error_code(int status);
 int		close_files(t_data data);
 int		close_all(t_data data, int free_children);
 int		close_all_and_tabfree(t_data data, char **tab);

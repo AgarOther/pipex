@@ -34,7 +34,7 @@ static int	execute_cmds(int fd_in, int fd_out, t_data data)
 	close_all(data, 0);
 	while (++i <= data.pipes_amount)
 		waitpid(data.children[i], &errno, 0);
-	return (errno);
+	return (get_error_code(errno));
 }
 
 static void	ft_heredoc(char **av, t_data *data)

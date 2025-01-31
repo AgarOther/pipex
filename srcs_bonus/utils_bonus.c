@@ -12,6 +12,15 @@
 
 #include "../includes_bonus/pipex_bonus.h"
 
+int	get_error_code(int status)
+{
+	if (WIFSIGNALED(status))
+        return (WTERMSIG(status) + EXIT_CODE_OFFSET);
+    else if (WIFEXITED(status))
+        return (WEXITSTATUS(status));
+    return (0);
+}
+
 int	close_files(t_data data)
 {
 	if (data.fd_infile >= 0)
