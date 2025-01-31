@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 22:54:36 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/30 16:37:34 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/31 00:44:09 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+# include <stdio.h>
 # include "../libft/libft.h"
 # include "../libft/get_next_line/get_next_line.h"
 

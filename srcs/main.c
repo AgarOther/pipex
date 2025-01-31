@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 22:51:23 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/30 16:43:15 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/31 00:44:19 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,8 @@ static pid_t	execute_first_cmd(char **av, char **envp, t_data data)
 static int	execute_cmds(char **av, char **envp, t_data data)
 {
 	pid_t	child_one;
-	int		status_one;
 	pid_t	child_two;
-	int		status_two;
+	int		errno;
 
 	child_one = execute_first_cmd(av, envp, data);
 	if (!child_one)
@@ -79,15 +78,11 @@ static int	execute_cmds(char **av, char **envp, t_data data)
 	child_two = execute_second_cmd(av, envp, data);
 	if (!child_two)
 		return (close_all(data));
-	if (waitpid(child_one, &status_one, 0) < 0)
+	if (waitpid(child_one, &errno, 0) < 0 || waitpid(child_two, &errno, 0) < 0)
 	{
 		close_all(data);
-		return (status_one);
-	}
-	else if (waitpid(child_two, &status_two, 0) < 0)
-	{
-		close_all(data);
-		return (status_two);
+		perror("An error occured in one of the child processes. Aborting.\n");
+		exit(-1);
 	}
 	close_files(data);
 	return (0);

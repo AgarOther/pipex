@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 11:10:44 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/29 14:28:16 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/01/31 01:39:16 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,26 +58,40 @@ char	*get_path(char **cmd, char **envp)
 	return (path);
 }
 
-int	close_fds(t_data data)
+int	close_files(t_data data)
 {
-	close(data.fd_infile);
-	close(data.fd_outfile);
-	return (0);
+	if (data.fd_infile > 0)
+		close(data.fd_infile);
+	if (data.fd_outfile > 0)
+		close(data.fd_outfile);
+	return (1);
 }
 
-int	close_all(t_data data)
+int	close_all(t_data data, int free_children)
 {
-	close_fds(data);
-	close(data.pipes[0]);
-	close(data.pipes[1]);
-	if (data.here_doc)
-		unlink(TMP_FILEPATH);
-	return (0);
+	int	i;
+
+	close_files(data);
+	if (data.pipes)
+	{
+		i = 0;
+		while (i < data.pipes_amount)
+		{
+			close(data.pipes[i][0]);
+			close(data.pipes[i][1]);
+			free(data.pipes[i]);
+			i++;
+		}
+		free(data.pipes);
+	}
+	if (free_children)
+		free(data.children);
+	return (1);
 }
 
 int	close_all_and_tabfree(t_data data, char **tab)
 {
-	close_all(data);
+	close_all(data, 1);
 	ft_tabfree(tab, ft_tablen((const char **)tab));
 	exit(0);
 }
