@@ -1,6 +1,6 @@
 # Compilation
 CC					=	cc
-CFLAGS				=	-Wall -Wextra -Werror -g
+CFLAGS				=	-Wall -Wextra -Werror
 
 # Names
 NAME				=	pipex
