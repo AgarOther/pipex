@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 13:14:56 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/31 13:32:54 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/02/01 11:27:36 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	execute_childcmd(int fd_in, int fd_out, int i, t_data data)
 		if (path)
 			free(path);
 		perror("Error: A command didn't get executed: ");
-		exit(-1);
+		exit(127);
 	}
 }
 

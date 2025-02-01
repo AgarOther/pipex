@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 11:10:44 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/31 13:33:10 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/02/01 11:26:38 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 int	get_error_code(int status)
 {
 	if (WIFSIGNALED(status))
-        return (WTERMSIG(status) + EXIT_CODE_OFFSET);
-    else if (WIFEXITED(status))
-        return (WEXITSTATUS(status));
-    return (0);
+		return (WTERMSIG(status));
+	else if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	else if (WIFSTOPPED(status))
+		return (WSTOPSIG(status));
+	return (0);
 }
 
 int	close_files(t_data data)
@@ -63,10 +65,9 @@ int	close_all(t_data data, int free_children)
 	return (1);
 }
 
-int	close_all_and_tabfree(t_data data, char **tab)
+void	close_all_and_tabfree(t_data data, char **tab)
 {
 	close_all(data, 1);
 	if (tab)
 		ft_tabfree(tab, ft_tablen((const char **)tab));
-	exit(0);
 }

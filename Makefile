@@ -3,8 +3,8 @@ CC					=	cc
 CFLAGS				=	-Wall -Wextra -Werror -g
 
 # Names
-NAME				=	pipexxx
-NAME_BONUS			=	pipex
+NAME				=	pipex
+NAME_BONUS			=	pipex_bonus
 
 # Sources & Includes
 SRCS				= 	srcs/main.c \

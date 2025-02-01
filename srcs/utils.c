@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 23:00:45 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/31 12:15:08 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/02/01 11:44:37 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,6 @@ int	close_all_and_tabfree(t_data data, char **tab)
 {
 	close_all(data);
 	ft_tabfree(tab, ft_tablen((const char **)tab));
-	perror("Error\n");
-	exit(-1);
+	perror("Error: ");
+	exit(127);
 }

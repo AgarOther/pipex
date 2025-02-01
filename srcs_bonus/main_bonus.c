@@ -6,13 +6,13 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 23:42:13 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/31 13:37:36 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/02/01 11:39:26 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes_bonus/pipex_bonus.h"
 
-static int	execute_cmds(int fd_in, int fd_out, t_data data)
+static int	execute_cmds(int fd_in, int fd_out, t_data *data)
 {
 	int	i;
 	int	errno;
@@ -20,20 +20,22 @@ static int	execute_cmds(int fd_in, int fd_out, t_data data)
 	i = 0;
 	while (1)
 	{
-		data.children[i] = fork();
-		if (data.children[i] < 0)
-			return (close_all(data, 1));
-		else if (data.children[i] == 0)
-			execute_childcmd(fd_in, fd_out, i, data);
-		if (!manage_fds(&fd_in, &fd_out, i, data))
+		data->children[i] = fork();
+		if (data->children[i] < 0)
+			return (close_all(*data, 1));
+		else if (data->children[i] == 0)
+			execute_childcmd(fd_in, fd_out, i, *data);
+		if (!manage_fds(&fd_in, &fd_out, i, *data))
 			break ;
 		i++;
 	}
 	i = -1;
 	errno = 0;
-	close_all(data, 0);
-	while (++i <= data.pipes_amount)
-		waitpid(data.children[i], &errno, 0);
+	close_all(*data, 0);
+	while (++i <= data->pipes_amount)
+		waitpid(data->children[i], &errno, 0);
+	if (data->exit_code)
+		return (data->exit_code);
 	return (get_error_code(errno));
 }
 
@@ -67,6 +69,8 @@ static void	get_pipes(int ac, t_data *data)
 {
 	int	i;
 
+	if (data->fd_outfile < 0)
+		data->exit_code = 1;
 	data->pipes = malloc((ac - 4 - data->here_doc) * sizeof(int *));
 	if (!data->pipes)
 	{
@@ -96,6 +100,7 @@ int	main(int ac, char **av, char **envp)
 	int		status;
 
 	data.here_doc = 0;
+	data.exit_code = 0;
 	if (ac < 5 || ft_tabhasemptystr(av))
 		return (0);
 	if (!ft_strncmp(av[1], "here_doc", 8))
@@ -112,7 +117,7 @@ int	main(int ac, char **av, char **envp)
 		return (close_all(data, 0));
 	data.av = av;
 	data.envp = envp;
-	status = execute_cmds(data.fd_infile, data.pipes[0][1], data);
+	status = execute_cmds(data.fd_infile, data.pipes[0][1], &data);
 	if (data.children)
 		free(data.children);
 	return (status);

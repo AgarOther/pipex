@@ -6,11 +6,22 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 22:51:23 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/31 00:44:19 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/02/01 11:43:43 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
+
+static int	get_error_code(int status)
+{
+	if (WIFSIGNALED(status))
+		return (WTERMSIG(status));
+	else if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	else if (WIFSTOPPED(status))
+		return (WSTOPSIG(status));
+	return (0);
+}
 
 static pid_t	execute_second_cmd(char **av, char **envp, t_data data)
 {
@@ -82,7 +93,7 @@ static int	execute_cmds(char **av, char **envp, t_data data)
 	{
 		close_all(data);
 		perror("An error occured in one of the child processes. Aborting.\n");
-		exit(-1);
+		exit(get_error_code(errno));
 	}
 	close_files(data);
 	return (0);
