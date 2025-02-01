@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 22:54:36 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/01/31 00:44:09 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/02/01 21:22:51 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct s_data
 	int		fd_infile;
 	int		fd_outfile;
 	int		pipes[2];
+	int		errno;
 }				t_data;
 
 // Utils

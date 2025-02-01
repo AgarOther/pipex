@@ -6,7 +6,7 @@
 /*   By: scraeyme <scraeyme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 22:51:23 by scraeyme          #+#    #+#             */
-/*   Updated: 2025/02/01 11:43:43 by scraeyme         ###   ########.fr       */
+/*   Updated: 2025/02/01 21:30:31 by scraeyme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,26 +77,19 @@ static pid_t	execute_first_cmd(char **av, char **envp, t_data data)
 	return (child_one);
 }
 
-static int	execute_cmds(char **av, char **envp, t_data data)
+static void	execute_cmds(char **av, char **envp, t_data *data)
 {
 	pid_t	child_one;
 	pid_t	child_two;
 	int		errno;
 
-	child_one = execute_first_cmd(av, envp, data);
-	if (!child_one)
-		return (close_all(data));
-	child_two = execute_second_cmd(av, envp, data);
-	if (!child_two)
-		return (close_all(data));
-	if (waitpid(child_one, &errno, 0) < 0 || waitpid(child_two, &errno, 0) < 0)
-	{
-		close_all(data);
-		perror("An error occured in one of the child processes. Aborting.\n");
-		exit(get_error_code(errno));
-	}
-	close_files(data);
-	return (0);
+	child_one = execute_first_cmd(av, envp, *data);
+	child_two = execute_second_cmd(av, envp, *data);
+	waitpid(child_one, &errno, 0);
+	waitpid(child_two, &errno, 0);
+	if (data->errno == 0)
+		data->errno = get_error_code(errno);
+	close_files(*data);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -105,9 +98,14 @@ int	main(int ac, char **av, char **envp)
 
 	if (ac != 5 || ft_tabhasemptystr(av))
 		return (1);
+	data.errno = 0;
 	data.fd_infile = open(av[1], O_RDONLY);
 	data.fd_outfile = open(av[4], O_CREAT | O_WRONLY | O_TRUNC, 0777);
+	if ((data.fd_infile == -1 && data.fd_outfile == -1)
+		|| (data.fd_outfile == -1))
+		data.errno = 1;
 	if (pipe(data.pipes) < 0)
 		return (close_files(data));
-	return (execute_cmds(av, envp, data));
+	execute_cmds(av, envp, &data);
+	return (data.errno);
 }
